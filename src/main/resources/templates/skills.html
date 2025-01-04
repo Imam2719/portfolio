@@ -1,0 +1,509 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Skills & Certifications - Portfolio</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/feather-icons/4.28.0/feather.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <script th:src="@{/skills/skills_tailwind-config.js}"></script>
+    <link rel="stylesheet" th:href="@{/skills/style.css}">
+    <script th:inline="javascript">
+        /*<![CDATA[*/
+        window.skillsData = /*[[${skillsData}]]*/ {};
+        window.certificatesData = /*[[${certificates}]]*/ [];
+        window.skillCertificates = {
+            'HTML': /*[[@{/certificate/HTML.png}]]*/ '',
+            'CSS': /*[[@{/certificate/CSS.png}]]*/ '',
+            'CSS(Tailwind)': /*[[@{/certificate/CSS(Tailwind).png}]]*/ '',
+            'React.js': /*[[@{/certificate/React.js.png}]]*/ '',
+            'Node.js': /*[[@{/certificate/Node.js.png}]]*/ '',
+            'JavaScript': /*[[@{/certificate/JavaScript.png}]]*/ '',
+            'Spring Boot': /*[[@{/certificate/Spring Boot.png}]]*/ '',
+            'Java': /*[[@{/certificate/Java.png}]]*/ '',
+            'Python': /*[[@{/certificate/Python.png}]]*/ '',
+            'Django': /*[[@{/certificate/Django.png}]]*/ '',
+            'PHP': /*[[@{/certificate/PHP.png}]]*/ '',
+            'Laravel': /*[[@{/certificate/Laravel.png}]]*/ ''
+        };
+        /*]]>*/
+    </script>
+    <!-- Add new styles -->
+    <style>
+        .skill-card {
+             transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+             position: relative;
+             overflow: hidden;
+         }
+
+         .skill-card::before {
+             content: '';
+             position: absolute;
+             top: 0;
+             left: -100%;
+             width: 100%;
+             height: 100%;
+             background: linear-gradient(
+                 90deg,
+                 transparent,
+                 rgba(255, 255, 255, 0.2),
+                 transparent
+             );
+             transition: left 0.7s ease;
+         }
+
+         .skill-card:hover::before {
+             left: 100%;
+         }
+
+         .skill-icon {
+             transition: all 0.4s ease;
+         }
+
+         .skill-card:hover .skill-icon {
+             transform: rotate(360deg) scale(1.2);
+         }
+
+         .progress-ring {
+             transition: stroke-dashoffset 0.8s ease;
+         }
+
+         @keyframes ripple {
+             0% { transform: scale(1); opacity: 1; }
+             100% { transform: scale(2); opacity: 0; }
+         }
+
+         .ripple-effect::after {
+             content: '';
+             position: absolute;
+             width: 100%;
+             height: 100%;
+             border: 2px solid #0ea5e9;
+             border-radius: inherit;
+             animation: ripple 1.5s infinite;
+         }
+
+         .floating-badge {
+             animation: float 3s ease-in-out infinite;
+         }
+
+         @keyframes float {
+             0%, 100% { transform: translateY(0); }
+             50% { transform: translateY(-10px); }
+         }
+
+         .skill-progress-indicator {
+             position: relative;
+             width: 60px;
+             height: 60px;
+         }
+
+         .skill-progress-circle {
+             transform: rotate(-90deg);
+             transform-origin: 50% 50%;
+         }
+
+         .expertise-grid {
+             display: grid;
+             grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+             gap: 1.5rem;
+         }
+
+         .expertise-card {
+             background: rgba(255, 255, 255, 0.1);
+             backdrop-filter: blur(10px);
+             border-radius: 1rem;
+             padding: 1.5rem;
+             transition: all 0.3s ease;
+         }
+
+         .expertise-card:hover {
+             transform: translateY(-5px);
+             box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+         }
+    </style>
+</head>
+<body class="bg-gradient-to-br from-gray-50 to-gray-100 dark:from-gray-900 dark:to-gray-800 text-gray-800 dark:text-gray-200 transition-all duration-300">
+
+!-- Navbar -->
+<nav class="bg-white/80 dark:bg-gray-800/80 backdrop-blur-md shadow-lg fixed w-full top-0 z-[100] transition-all duration-300">
+    <div class="container mx-auto flex justify-between items-center py-4 px-4 sm:px-6">
+        <div class="flex items-center space-x-4">
+            <button id="menuToggle" class="p-2 rounded-xl hover:bg-primary-100 dark:hover:bg-gray-700 transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-primary-500 group">
+                <i data-feather="menu" class="w-6 h-6 group-hover:stroke-primary-600"></i>
+            </button>
+            <h1 class="text-xl sm:text-2xl md:text-3xl font-bold bg-gradient-to-r from-primary-600 to-primary-400 dark:from-primary-400 dark:to-primary-200 bg-clip-text text-transparent">Portfolio</h1>
+        </div>
+        <div class="flex items-center space-x-3">
+            <a th:href="@{/cv.png}" download class="flex items-center space-x-2 px-4 py-2 text-sm bg-primary-600 hover:bg-primary-700 text-white rounded-xl transition-all duration-300 shadow-md hover:shadow-lg transform hover:-translate-y-0.5">
+                <i data-feather="download" class="w-4 h-4"></i>
+                <span class="hidden sm:inline">Download CV</span>
+            </a>
+            <button id="darkModeToggle" class="p-2 rounded-xl hover:bg-primary-100 dark:hover:bg-gray-700 transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-primary-500">
+                <i data-feather="moon" class="hidden dark:block w-5 h-5"></i>
+                <i data-feather="sun" class="block dark:hidden w-5 h-5"></i>
+            </button>
+        </div>
+    </div>
+</nav>
+<!-- Sidebar Menu -->
+<aside id="sidebar" class="fixed left-0 top-0 h-screen w-72 bg-white/90 dark:bg-gray-800/90 backdrop-blur-md shadow-2xl z-[90] transform -translate-x-full transition-transform duration-300 ease-in-out">
+    <div class="h-[64px]"></div>
+    <div class="flex flex-col h-[calc(100%-64px)] overflow-y-auto">
+        <ul class="flex-1 px-4 py-4 space-y-2">
+            <li>
+                <a href="/overview" class="flex items-center space-x-3 px-4 py-3 rounded-xl text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors duration-300">
+                    <i data-feather="home" class="w-5 h-5 text-gray-500 dark:text-gray-400"></i>
+                    <span class="font-medium">Overview</span>
+                </a>
+            </li>
+            <li>
+                <a href="/about" class="flex items-center space-x-3 px-4 py-3 rounded-xl text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors duration-300">
+                    <i data-feather="user" class="w-5 h-5 text-gray-500 dark:text-gray-400"></i>
+                    <span class="font-medium">About me</span>
+                </a>
+            </li>
+            <li>
+                <a href="/skills" class="flex items-center space-x-3 px-4 py-3 rounded-xl text-primary-600 dark:text-primary-400 bg-primary-50 dark:bg-primary-900/30">
+                    <i data-feather="award" class="w-5 h-5 text-primary-600 dark:text-primary-400"></i>
+                    <span class="font-medium">Skills & Certifications</span>
+                </a>
+            </li>
+            <li>
+                <a href="/services" class="flex items-center space-x-3 px-4 py-3 rounded-xl text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors duration-300">
+                    <i data-feather="briefcase" class="w-5 h-5 text-gray-500 dark:text-gray-400"></i>
+                    <span class="font-medium">My Services</span>
+                </a>
+            </li>
+            <li>
+                <a href="/work" class="flex items-center space-x-3 px-4 py-3 rounded-xl text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors duration-300">
+                    <i data-feather="folder" class="w-5 h-5 text-gray-500 dark:text-gray-400"></i>
+                    <span class="font-medium">My Work</span>
+                </a>
+            </li>
+            <li>
+                <a href="/hire" class="flex items-center space-x-3 px-4 py-3 rounded-xl text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors duration-300">
+                    <i data-feather="mail" class="w-5 h-5 text-gray-500 dark:text-gray-400"></i>
+                    <span class="font-medium">Hire me</span>
+                </a>
+            </li>
+        </ul>
+        <div class="p-4 mt-auto">
+            <div class="bg-gradient-to-r from-primary-500 to-primary-600 rounded-xl p-4 text-white">
+                <h4 class="font-semibold mb-2">Need help?</h4>
+                <p class="text-sm text-primary-100 mb-3">Contact me for consultancy</p>
+                <a href="/hire" class="inline-flex items-center space-x-2 bg-white text-primary-600 px-3 py-2 rounded-lg text-sm font-medium hover:bg-primary-50 transition-colors duration-300">
+                    <i data-feather="message-circle" class="w-4 h-4"></i>
+                    <span>Let's Talk</span>
+                </a>
+            </div>
+        </div>
+    </div>
+</aside>
+
+<!-- Enhanced Main Content -->
+<main class="pt-16">
+    <!-- Enhanced Hero Section -->
+    <section class="relative bg-gradient-to-br from-primary-600 to-primary-700 dark:from-primary-700 dark:to-primary-800 text-white py-32 overflow-hidden">
+        <!-- Enhanced Background Effects -->
+        <div class="absolute inset-0 bg-grid-pattern opacity-10"></div>
+        <div class="absolute inset-0">
+            <div class="absolute top-0 right-0 w-96 h-96 bg-primary-400 rounded-full filter blur-3xl opacity-20 animate-pulse"></div>
+            <div class="absolute bottom-0 left-0 w-96 h-96 bg-primary-500 rounded-full filter blur-3xl opacity-20 animate-pulse" style="animation-delay: -2s"></div>
+        </div>
+
+        <!-- Animated particles -->
+        <div class="particle-container absolute inset-0 overflow-hidden">
+            <div class="particles"></div>
+        </div>
+
+        <div class="container mx-auto px-4 relative">
+            <div class="text-center max-w-4xl mx-auto">
+                <h1 class="text-5xl md:text-7xl font-bold mb-8 animate-fade-in relative">
+                        <span class="bg-clip-text text-transparent bg-gradient-to-r from-white to-primary-200">
+                            Skills & Expertise
+                        </span>
+                    <div class="absolute -top-6 -right-6 w-12 h-12 floating-badge">
+                        <div class="relative w-full h-full">
+                            <div class="absolute inset-0 bg-primary-400 rounded-full opacity-20 ripple-effect"></div>
+                            <div class="absolute inset-0 flex items-center justify-center">
+                                <i data-feather="award" class="w-6 h-6"></i>
+                            </div>
+                        </div>
+                    </div>
+                </h1>
+
+                <p class="text-xl md:text-2xl opacity-90 mb-12 animate-slide-up">
+                    Crafting digital experiences with passion and precision
+                </p>
+
+                <!-- Enhanced Stats Grid -->
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-3xl mx-auto">
+                    <div class="stat-card p-6 rounded-2xl backdrop-blur-md transform hover:scale-105 transition-all">
+                        <div class="skill-progress-indicator mx-auto mb-4">
+                            <svg class="skill-progress-circle" viewBox="0 0 36 36">
+                                <path d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" fill="none" stroke="rgba(255, 255, 255, 0.2)" stroke-width="3"/>
+                                <path class="progress-ring" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" fill="none" stroke="#fff" stroke-width="3" stroke-dasharray="100, 100" stroke-dashoffset="75"/>
+                            </svg>
+                            <div class="absolute inset-0 flex items-center justify-center">
+                                <span class="text-2xl font-bold">10+</span>
+                            </div>
+                        </div>
+                        <h3 class="text-lg font-semibold mb-2">Technologies</h3>
+                        <p class="text-sm opacity-75">Mastered & Implemented</p>
+                    </div>
+
+                    <div class="stat-card p-6 rounded-2xl backdrop-blur-md transform hover:scale-105 transition-all">
+                        <div class="skill-progress-indicator mx-auto mb-4">
+                            <svg class="skill-progress-circle" viewBox="0 0 36 36">
+                                <path d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" fill="none" stroke="rgba(255, 255, 255, 0.2)" stroke-width="3"/>
+                                <path class="progress-ring" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" fill="none" stroke="#fff" stroke-width="3" stroke-dasharray="100, 100" stroke-dashoffset="60"/>
+                            </svg>
+                            <div class="absolute inset-0 flex items-center justify-center">
+                                <span class="text-2xl font-bold">3+</span>
+                            </div>
+                        </div>
+                        <h3 class="text-lg font-semibold mb-2">Years</h3>
+                        <p class="text-sm opacity-75">Professional Experience</p>
+                    </div>
+
+                    <div class="stat-card p-6 rounded-2xl backdrop-blur-md transform hover:scale-105 transition-all">
+                        <div class="skill-progress-indicator mx-auto mb-4">
+                            <svg class="skill-progress-circle" viewBox="0 0 36 36">
+                                <path d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" fill="none" stroke="rgba(255, 255, 255, 0.2)" stroke-width="3"/>
+                                <path class="progress-ring" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" fill="none" stroke="#fff" stroke-width="3" stroke-dasharray="100, 100" stroke-dashoffset="45"/>
+                            </svg>
+                            <div class="absolute inset-0 flex items-center justify-center">
+                                <span class="text-2xl font-bold">15+</span>
+                            </div>
+                        </div>
+                        <h3 class="text-lg font-semibold mb-2">Certifications</h3>
+                        <p class="text-sm opacity-75">Professional Achievements</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Enhanced Skills Section -->
+    <section class="py-16 relative">
+        <div class="container mx-auto px-4">
+            <!-- Enhanced Section Header -->
+            <div class="text-center mb-16">
+                <h2 class="text-4xl font-bold mb-6 bg-gradient-to-r from-primary-600 to-primary-400 bg-clip-text text-transparent">
+                    Technical Expertise
+                </h2>
+                <p class="text-lg text-gray-600 dark:text-gray-400 max-w-2xl mx-auto">
+                    A comprehensive showcase of my technical skills and professional certifications
+                </p>
+            </div>
+
+            <!-- Enhanced Skills Grid -->
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                <!-- Skills Column -->
+                <div class="space-y-8">
+                    <!-- Skills Container -->
+                    <div class="bg-white dark:bg-gray-800 rounded-2xl p-8 shadow-lg transform transition-all duration-300 hover:shadow-xl">
+                        <div class="flex items-center justify-between mb-8">
+                            <h3 class="text-2xl font-bold bg-gradient-to-r from-primary-600 to-primary-400 bg-clip-text text-transparent">
+                                Core Technologies
+                            </h3>
+                            <div class="w-12 h-12 bg-primary-100 dark:bg-primary-900/30 rounded-xl flex items-center justify-center">
+                                <i data-feather="code" class="w-6 h-6 text-primary-600 dark:text-primary-400"></i>
+                            </div>
+                        </div>
+
+                        <!-- Enhanced Skills Grid -->
+                        <div id="skillsContainer" class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                            <!-- Skills will be dynamically inserted here -->
+                        </div>
+                    </div>
+
+            </div>
+                <!-- Additional Skills Overview -->
+                <div class="bg-white dark:bg-gray-800 rounded-2xl p-8 shadow-lg">
+                    <div class="flex items-center justify-between mb-8">
+                        <h3 class="text-2xl font-bold bg-gradient-to-r from-primary-600 to-primary-400 bg-clip-text text-transparent">
+                            Additional Expertise
+                        </h3>
+                        <div class="w-12 h-12 bg-primary-100 dark:bg-primary-900/30 rounded-xl flex items-center justify-center">
+                            <i data-feather="star" class="w-6 h-6 text-primary-600 dark:text-primary-400"></i>
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-2 gap-4">
+                        <!-- Programming Fundamentals -->
+                        <div class="p-4 rounded-xl bg-gray-50 dark:bg-gray-700/50">
+                            <div class="flex items-center space-x-3 mb-4">
+                                <i data-feather="code" class="w-5 h-5 text-primary-600 dark:text-primary-400"></i>
+                                <span class="font-medium">Programming Fundamentals</span>
+                            </div>
+                            <div class="flex flex-wrap gap-2">
+                                <span class="px-3 py-1 text-sm bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300 rounded-full">Data structures</span>
+                                <span class="px-3 py-1 text-sm bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300 rounded-full">Algorithms</span>
+                                <span class="px-3 py-1 text-sm bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300 rounded-full">OOP principles</span>
+                                <span class="px-3 py-1 text-sm bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300 rounded-full">Design patterns</span>
+                                <span class="px-3 py-1 text-sm bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300 rounded-full">Software architecture</span>
+                            </div>
+                        </div>
+
+                        <!-- Problem-Solving -->
+                        <div class="p-4 rounded-xl bg-gray-50 dark:bg-gray-700/50">
+                            <div class="flex items-center space-x-3 mb-4">
+                                <i data-feather="settings" class="w-5 h-5 text-primary-600 dark:text-primary-400"></i>
+                                <span class="font-medium">Problem-Solving</span>
+                            </div>
+                            <div class="flex flex-wrap gap-2">
+                                <span class="px-3 py-1 text-sm bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-300 rounded-full">Debugging strategies</span>
+                                <span class="px-3 py-1 text-sm bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-300 rounded-full">Performance optimization</span>
+                                <span class="px-3 py-1 text-sm bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-300 rounded-full">Security practices</span>
+                                <span class="px-3 py-1 text-sm bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-300 rounded-full">Clean code</span>
+                            </div>
+                        </div>
+
+                        <!-- Version Control -->
+                        <div class="p-4 rounded-xl bg-gray-50 dark:bg-gray-700/50">
+                            <div class="flex items-center space-x-3 mb-4">
+                                <i data-feather="git-branch" class="w-5 h-5 text-primary-600 dark:text-primary-400"></i>
+                                <span class="font-medium">Version Control</span>
+                            </div>
+                            <div class="flex flex-wrap gap-2">
+                                <span class="px-3 py-1 text-sm bg-purple-100 dark:bg-purple-900/30 text-purple-700 dark:text-purple-300 rounded-full">Git</span>
+                                <span class="px-3 py-1 text-sm bg-purple-100 dark:bg-purple-900/30 text-purple-700 dark:text-purple-300 rounded-full">GitHub</span>
+                                <span class="px-3 py-1 text-sm bg-purple-100 dark:bg-purple-900/30 text-purple-700 dark:text-purple-300 rounded-full">GitLab</span>
+                            </div>
+                        </div>
+
+                        <!-- Project Management -->
+                        <div class="p-4 rounded-xl bg-gray-50 dark:bg-gray-700/50">
+                            <div class="flex items-center space-x-3 mb-4">
+                                <i data-feather="clipboard" class="w-5 h-5 text-primary-600 dark:text-primary-400"></i>
+                                <span class="font-medium">Project Management</span>
+                            </div>
+                            <div class="flex flex-wrap gap-2">
+                                <span class="px-3 py-1 text-sm bg-orange-100 dark:bg-orange-900/30 text-orange-700 dark:text-orange-300 rounded-full">Jira</span>
+                                <span class="px-3 py-1 text-sm bg-orange-100 dark:bg-orange-900/30 text-orange-700 dark:text-orange-300 rounded-full">Trello</span>
+                                <span class="px-3 py-1 text-sm bg-orange-100 dark:bg-orange-900/30 text-orange-700 dark:text-orange-300 rounded-full">Asana</span>
+                            </div>
+                        </div>
+
+                        <!-- Testing -->
+                        <div class="p-4 rounded-xl bg-gray-50 dark:bg-gray-700/50">
+                            <div class="flex items-center space-x-3 mb-4">
+                                <i data-feather="check-square" class="w-5 h-5 text-primary-600 dark:text-primary-400"></i>
+                                <span class="font-medium">Testing</span>
+                            </div>
+                            <div class="flex flex-wrap gap-2">
+                                <span class="px-3 py-1 text-sm bg-red-100 dark:bg-red-900/30 text-red-700 dark:text-red-300 rounded-full">JUnit Test</span>
+                                <span class="px-3 py-1 text-sm bg-red-100 dark:bg-red-900/30 text-red-700 dark:text-red-300 rounded-full">Integration Testing</span>
+                                <span class="px-3 py-1 text-sm bg-red-100 dark:bg-red-900/30 text-red-700 dark:text-red-300 rounded-full">System Testing</span>
+                                <span class="px-3 py-1 text-sm bg-red-100 dark:bg-red-900/30 text-red-700 dark:text-red-300 rounded-full">Selenium</span>
+                            </div>
+                        </div>
+
+                        <!-- System design -->
+                        <div class="p-4 rounded-xl bg-gray-50 dark:bg-gray-700/50">
+                            <div class="flex items-center space-x-3 mb-4">
+                                <i data-feather="layers" class="w-5 h-5 text-primary-600 dark:text-primary-400"></i>
+                                <span class="font-medium">System design</span>
+                            </div>
+                            <div class="flex flex-wrap gap-2">
+                                <span class="px-3 py-1 text-sm bg-indigo-100 dark:bg-indigo-900/30 text-indigo-700 dark:text-indigo-300 rounded-full">Scalability</span>
+                                <span class="px-3 py-1 text-sm bg-indigo-100 dark:bg-indigo-900/30 text-indigo-700 dark:text-indigo-300 rounded-full">High Availability</span>
+                                <span class="px-3 py-1 text-sm bg-indigo-100 dark:bg-indigo-900/30 text-indigo-700 dark:text-indigo-300 rounded-full">Performance</span>
+                                <span class="px-3 py-1 text-sm bg-indigo-100 dark:bg-indigo-900/30 text-indigo-700 dark:text-indigo-300 rounded-full">Data Management</span>
+                                <span class="px-3 py-1 text-sm bg-indigo-100 dark:bg-indigo-900/30 text-indigo-700 dark:text-indigo-300 rounded-full">Communication</span>
+                                <span class="px-3 py-1 text-sm bg-indigo-100 dark:bg-indigo-900/30 text-indigo-700 dark:text-indigo-300 rounded-full">Security</span>
+                                <span class="px-3 py-1 text-sm bg-indigo-100 dark:bg-indigo-900/30 text-indigo-700 dark:text-indigo-300 rounded-full">Common Patterns</span>
+                            </div>
+                        </div>
+
+                        <!-- Specialized Skills-->
+                        <div class="p-4 rounded-xl bg-gray-50 dark:bg-gray-700/50">
+                            <div class="flex items-center space-x-3 mb-4">
+                                <i data-feather="cpu" class="w-5 h-5 text-primary-600 dark:text-primary-400"></i>
+                                <span class="font-medium">Specialized Skills</span>
+                            </div>
+                            <div class="flex flex-wrap gap-2">
+                                <span class="px-3 py-1 text-sm bg-pink-100 dark:bg-pink-900/30 text-pink-700 dark:text-pink-300 rounded-full">AI/Machine Learning fundamentals</span>
+                                <span class="px-3 py-1 text-sm bg-pink-100 dark:bg-pink-900/30 text-pink-700 dark:text-pink-300 rounded-full">Database optimization</span>
+                                <span class="px-3 py-1 text-sm bg-pink-100 dark:bg-pink-900/30 text-pink-700 dark:text-pink-300 rounded-full">DevOps practices</span>
+                            </div>
+                        </div>
+
+                        <!-- Beyond Technical -->
+                        <div class="p-4 rounded-xl bg-gray-50 dark:bg-gray-700/50">
+                            <div class="flex items-center space-x-3 mb-4">
+                                <i data-feather="users" class="w-5 h-5 text-primary-600 dark:text-primary-400"></i>
+                                <span class="font-medium">Beyond Technical</span>
+                            </div>
+                            <div class="flex flex-wrap gap-2">
+                                <span class="px-3 py-1 text-sm bg-teal-100 dark:bg-teal-900/30 text-teal-700 dark:text-teal-300 rounded-full">Project estimation</span>
+                                <span class="px-3 py-1 text-sm bg-teal-100 dark:bg-teal-900/30 text-teal-700 dark:text-teal-300 rounded-full">Technical communication</span>
+                                <span class="px-3 py-1 text-sm bg-teal-100 dark:bg-teal-900/30 text-teal-700 dark:text-teal-300 rounded-full">Collaboration tools</span>
+                                <span class="px-3 py-1 text-sm bg-teal-100 dark:bg-teal-900/30 text-teal-700 dark:text-teal-300 rounded-full">Agile methodologies</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Call to Action Section -->
+    <section class="py-16 bg-gradient-to-br from-primary-600 to-primary-700 dark:from-primary-700 dark:to-primary-800 text-white">
+        <div class="container mx-auto px-4">
+            <div class="max-w-4xl mx-auto text-center">
+                <h2 class="text-3xl md:text-4xl font-bold mb-6">Ready to Collaborate?</h2>
+                <p class="text-lg mb-8 opacity-90">Let's turn your ideas into reality with my technical expertise</p>
+                <a href="/hire" class="inline-flex items-center px-6 py-3 bg-white text-primary-600 rounded-xl font-medium hover:bg-primary-50 transition-colors duration-300">
+                    <i data-feather="mail" class="w-5 h-5 mr-2"></i>
+                    Get in Touch
+                </a>
+            </div>
+        </div>
+    </section>
+</main>
+
+<!-- Keep original overlay -->
+<div id="overlay" class="fixed inset-0 bg-black/50 backdrop-blur-sm z-[80] hidden transition-opacity duration-300"></div>
+
+<!-- Scripts -->
+<script th:src="@{/skills/skills.js}"></script>
+<script th:src="@{/skills/main.js}"></script>
+<script>
+    // Initialize everything when DOM is loaded
+    document.addEventListener('DOMContentLoaded', () => {
+        if (typeof feather !== 'undefined') {
+            feather.replace();
+        }
+        initializeSkillsPage();
+        initDarkMode();
+        initSidebar();
+        initAnimations();
+    });
+
+    // Initialize animations
+    function initAnimations() {
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('animate-fade-in');
+                    observer.unobserve(entry.target);
+                }
+            });
+        }, observerOptions);
+
+        document.querySelectorAll('.animate-on-scroll').forEach(el => {
+            observer.observe(el);
+        });
+    }
+</script>
+</body>
+</html>

@@ -1,0 +1,610 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>My Services - Portfolio</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/feather-icons/4.28.0/feather.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        primary: {"50":"#f0f9ff","100":"#e0f2fe","200":"#bae6fd","300":"#7dd3fc","400":"#38bdf8","500":"#0ea5e9","600":"#0284c7","700":"#0369a1","800":"#075985","900":"#0c4a6e","950":"#082f49"}
+                    },
+                    fontFamily: {
+                        'body': ['Poppins', 'ui-sans-serif', 'system-ui'],
+                        'sans': ['Poppins', 'ui-sans-serif', 'system-ui']
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+        }
+        .service-card {
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+        }
+        .service-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+            transition: 0.5s;
+        }
+        .service-card:hover::before {
+            left: 100%;
+        }
+        .service-card:hover {
+            transform: translateY(-12px);
+            box-shadow: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
+        }
+        .service-icon {
+            transition: all 0.5s ease;
+        }
+        .service-card:hover .service-icon {
+            transform: scale(1.2) rotate(360deg);
+            color: #0ea5e9;
+        }
+        .feature-item {
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .feature-item:hover {
+            transform: scale(1.05);
+        }
+        @keyframes float {
+            0% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+            100% { transform: translateY(0px); }
+        }
+        .floating {
+            animation: float 3s ease-in-out infinite;
+        }
+        .gradient-border {
+            position: relative;
+            border-radius: 1rem;
+        }
+        .gradient-border::after {
+            content: '';
+            position: absolute;
+            inset: -2px;
+            z-index: -1;
+            background: linear-gradient(45deg, #0ea5e9, #38bdf8, #7dd3fc);
+            border-radius: inherit;
+            transition: opacity 0.3s ease;
+            opacity: 0;
+        }
+        .gradient-border:hover::after {
+            opacity: 1;
+        }
+    </style>
+</head>
+<body class="bg-gradient-to-br from-gray-50 to-gray-100 dark:from-gray-900 dark:to-gray-800 text-gray-800 dark:text-gray-200 transition-all duration-300">
+<!-- Navbar -->
+<nav class="bg-white/80 dark:bg-gray-800/80 backdrop-blur-md shadow-lg fixed w-full top-0 z-[100] transition-all duration-300">
+    <div class="container mx-auto flex justify-between items-center py-4 px-4 sm:px-6">
+        <div class="flex items-center space-x-4">
+            <button id="menuToggle" class="p-2 rounded-xl hover:bg-primary-100 dark:hover:bg-gray-700 transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-primary-500 group">
+                <i data-feather="menu" class="w-6 h-6 group-hover:stroke-primary-600"></i>
+            </button>
+            <h1 class="text-xl sm:text-2xl md:text-3xl font-bold bg-gradient-to-r from-primary-600 to-primary-400 dark:from-primary-400 dark:to-primary-200 bg-clip-text text-transparent">Portfolio</h1>
+        </div>
+        <div class="flex items-center space-x-3">
+            <a href="/cv.png" download class="flex items-center space-x-2 px-4 py-2 text-sm bg-primary-600 hover:bg-primary-700 text-white rounded-xl transition-all duration-300 shadow-md hover:shadow-lg transform hover:-translate-y-0.5">
+                <i data-feather="download" class="w-4 h-4"></i>
+                <span class="hidden sm:inline">Download CV</span>
+            </a>
+            <button id="darkModeToggle" class="p-2 rounded-xl hover:bg-primary-100 dark:hover:bg-gray-700 transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-primary-500">
+                <i data-feather="moon" class="hidden dark:block w-5 h-5"></i>
+                <i data-feather="sun" class="block dark:hidden w-5 h-5"></i>
+            </button>
+        </div>
+    </div>
+</nav>
+
+<!-- Mobile Overlay -->
+<div id="overlay" class="fixed inset-0 bg-black/50 backdrop-blur-sm z-[80] hidden transition-opacity duration-300"></div>
+
+<!-- Sidebar Menu -->
+<aside id="sidebar" class="fixed left-0 top-0 h-screen w-72 bg-white/90 dark:bg-gray-800/90 backdrop-blur-md shadow-2xl z-[90] transform -translate-x-full transition-transform duration-300 ease-in-out">
+    <div class="h-[64px]"></div> <!-- Spacer for navbar -->
+    <div class="flex flex-col h-[calc(100%-64px)] overflow-y-auto">
+        <ul class="flex-1 px-4 py-4 space-y-2">
+            <li>
+                <a href="/overview" class="flex items-center space-x-3 px-4 py-3 rounded-xl text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors duration-300">
+                    <i data-feather="home" class="w-5 h-5"></i>
+                    <span class="font-medium">Overview</span>
+                </a>
+            </li>
+            <li>
+                <a href="/about" class="flex items-center space-x-3 px-4 py-3 rounded-xl text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors duration-300">
+                    <i data-feather="user" class="w-5 h-5"></i>
+                    <span class="font-medium">About me</span>
+                </a>
+            </li>
+            <li>
+                <a href="/skills" class="flex items-center space-x-3 px-4 py-3 rounded-xl text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors duration-300">
+                    <i data-feather="award" class="w-5 h-5"></i>
+                    <span class="font-medium">Skills & Certifications</span>
+                </a>
+            </li>
+            <li>
+                <a href="/services" class="flex items-center space-x-3 px-4 py-3 rounded-xl text-primary-600 bg-primary-50 dark:bg-primary-900/30 dark:text-primary-400">
+                    <i data-feather="briefcase" class="w-5 h-5"></i>
+                    <span class="font-medium">My Services</span>
+                </a>
+            </li>
+            <li>
+                <a href="/work" class="flex items-center space-x-3 px-4 py-3 rounded-xl text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors duration-300">
+                    <i data-feather="folder" class="w-5 h-5"></i>
+                    <span class="font-medium">My Work</span>
+                </a>
+            </li>
+            <li>
+                <a href="/hire" class="flex items-center space-x-3 px-4 py-3 rounded-xl text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors duration-300">
+                    <i data-feather="mail" class="w-5 h-5"></i>
+                    <span class="font-medium">Hire me</span>
+                </a>
+            </li>
+        </ul>
+        <div class="p-4 mt-auto">
+            <div class="bg-gradient-to-r from-primary-500 to-primary-600 rounded-xl p-4 text-white">
+                <h4 class="font-semibold mb-2">Need help?</h4>
+                <p class="text-sm text-primary-100 mb-3">Contact me for consultancy</p>
+                <a href="/hire" class="inline-flex items-center space-x-2 bg-white text-primary-600 px-3 py-2 rounded-lg text-sm font-medium hover:bg-primary-50 transition-colors duration-300">
+                    <i data-feather="message-circle" class="w-4 h-4"></i>
+                    <span>Let's Talk</span>
+                </a>
+            </div>
+        </div>
+    </div>
+</aside>
+<!-- Main Content -->
+<main class="pt-16">
+    <!-- Hero Section with Enhanced Animation -->
+    <section class="bg-primary-600 dark:bg-primary-800 text-white py-32 relative overflow-hidden">
+        <div class="absolute inset-0 bg-gradient-to-r from-primary-600/90 to-primary-800/90"></div>
+        <div class="absolute inset-0 opacity-30">
+            <div class="absolute inset-0" style="background-image: url('data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.4'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E');"></div>
+        </div>
+        <div class="container mx-auto px-6 relative z-10">
+            <div class="text-center max-w-4xl mx-auto">
+                <h1 class="text-6xl font-bold mb-6 leading-tight">Professional Services</h1>
+                <p class="text-2xl max-w-2xl mx-auto mb-12 text-primary-100">Transforming ideas into exceptional digital experiences through innovative solutions and expertise</p>
+                <div class="flex justify-center space-x-6">
+                    <a href="#services" class="group bg-white text-primary-600 hover:bg-primary-50 px-8 py-4 rounded-full font-semibold transition-all duration-300 shadow-lg hover:shadow-xl flex items-center space-x-2">
+                        <span>Explore Services</span>
+                        <i data-feather="arrow-right" class="w-5 h-5 group-hover:translate-x-1 transition-transform"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+        <div class="absolute bottom-0 left-0 right-0 h-20 bg-gradient-to-b from-transparent to-gray-100 dark:to-gray-900"></div>
+    </section>
+
+    <!-- Fixed Services Grid -->
+    <section id="services" class="py-24 bg-gray-100 dark:bg-gray-900">
+        <div class="container mx-auto px-6">
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <!-- Software Engineering -->
+                <div class="service-card gradient-border bg-white dark:bg-gray-800 rounded-2xl shadow-lg overflow-hidden border border-gray-100 dark:border-gray-700">
+                    <div class="p-8">
+                        <div class="flex justify-center mb-8 relative">
+                            <div class="service-icon p-6 bg-primary-50 dark:bg-primary-900/30 rounded-2xl relative overflow-hidden">
+                                <i data-feather="cpu" class="w-12 h-12 text-primary-600 dark:text-primary-400"></i>
+                                <div class="absolute inset-0 bg-gradient-to-r from-primary-400/20 to-transparent"></div>
+                            </div>
+                        </div>
+                        <h3 class="text-2xl font-bold text-center mb-4 bg-gradient-to-r from-primary-600 to-primary-400 bg-clip-text text-transparent">Software Engineering</h3>
+                        <p class="text-gray-600 dark:text-gray-300 text-center mb-6">Building robust and scalable solutions for complex business challenges.</p>
+                        <ul class="space-y-3">
+                            <li class="flex items-center p-3 bg-gray-50 dark:bg-gray-700/50 rounded-xl transition-colors">
+                                <i data-feather="check-circle" class="w-5 h-5 text-green-500 mr-3"></i>
+                                <span>Enterprise Software Development</span>
+                            </li>
+                            <li class="flex items-center p-3 bg-gray-50 dark:bg-gray-700/50 rounded-xl transition-colors">
+                                <i data-feather="check-circle" class="w-5 h-5 text-green-500 mr-3"></i>
+                                <span>Microservices Architecture</span>
+                            </li>
+                            <li class="flex items-center p-3 bg-gray-50 dark:bg-gray-700/50 rounded-xl transition-colors">
+                                <i data-feather="check-circle" class="w-5 h-5 text-green-500 mr-3"></i>
+                                <span>Cloud-Native Solutions</span>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Web Development -->
+                <div class="service-card gradient-border bg-white dark:bg-gray-800 rounded-2xl shadow-lg overflow-hidden border border-gray-100 dark:border-gray-700">
+                    <div class="p-8">
+                        <div class="flex justify-center mb-8 relative">
+                            <div class="service-icon p-6 bg-primary-50 dark:bg-primary-900/30 rounded-2xl relative overflow-hidden">
+                                <i data-feather="code" class="w-12 h-12 text-primary-600 dark:text-primary-400"></i>
+                                <div class="absolute inset-0 bg-gradient-to-r from-primary-400/20 to-transparent"></div>
+                            </div>
+                        </div>
+                        <h3 class="text-2xl font-bold text-center mb-4 bg-gradient-to-r from-primary-600 to-primary-400 bg-clip-text text-transparent">Web Development</h3>
+                        <p class="text-gray-600 dark:text-gray-300 text-center mb-6">Creating modern web applications with cutting-edge technologies.</p>
+                        <ul class="space-y-3">
+                            <li class="flex items-center p-3 bg-gray-50 dark:bg-gray-700/50 rounded-xl transition-colors">
+                                <i data-feather="check-circle" class="w-5 h-5 text-green-500 mr-3"></i>
+                                <span>React & Next.js Applications</span>
+                            </li>
+                            <li class="flex items-center p-3 bg-gray-50 dark:bg-gray-700/50 rounded-xl transition-colors">
+                                <i data-feather="check-circle" class="w-5 h-5 text-green-500 mr-3"></i>
+                                <span>REST & GraphQL APIs</span>
+                            </li>
+                            <li class="flex items-center p-3 bg-gray-50 dark:bg-gray-700/50 rounded-xl transition-colors">
+                                <i data-feather="check-circle" class="w-5 h-5 text-green-500 mr-3"></i>
+                                <span>Progressive Web Apps</span>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- UI/UX Design -->
+                <div class="service-card gradient-border bg-white dark:bg-gray-800 rounded-2xl shadow-lg overflow-hidden border border-gray-100 dark:border-gray-700">
+                    <div class="p-8">
+                        <div class="flex justify-center mb-8 relative">
+                            <div class="service-icon p-6 bg-primary-50 dark:bg-primary-900/30 rounded-2xl relative overflow-hidden">
+                                <i data-feather="layout" class="w-12 h-12 text-primary-600 dark:text-primary-400"></i>
+                                <div class="absolute inset-0 bg-gradient-to-r from-primary-400/20 to-transparent"></div>
+                            </div>
+                        </div>
+                        <h3 class="text-2xl font-bold text-center mb-4 bg-gradient-to-r from-primary-600 to-primary-400 bg-clip-text text-transparent">UI/UX Design</h3>
+                        <p class="text-gray-600 dark:text-gray-300 text-center mb-6">Crafting beautiful and intuitive user experiences.</p>
+                        <ul class="space-y-3">
+                            <li class="flex items-center p-3 bg-gray-50 dark:bg-gray-700/50 rounded-xl transition-colors">
+                                <i data-feather="check-circle" class="w-5 h-5 text-green-500 mr-3"></i>
+                                <span>User Research & Testing</span>
+                            </li>
+                            <li class="flex items-center p-3 bg-gray-50 dark:bg-gray-700/50 rounded-xl transition-colors">
+                                <i data-feather="check-circle" class="w-5 h-5 text-green-500 mr-3"></i>
+                                <span>Wireframing & Prototyping</span>
+                            </li>
+                            <li class="flex items-center p-3 bg-gray-50 dark:bg-gray-700/50 rounded-xl transition-colors">
+                                <i data-feather="check-circle" class="w-5 h-5 text-green-500 mr-3"></i>
+                                <span>Design Systems</span>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Mobile Development -->
+                <div class="service-card gradient-border bg-white dark:bg-gray-800 rounded-2xl shadow-lg overflow-hidden border border-gray-100 dark:border-gray-700">
+                    <div class="p-8">
+                        <div class="flex justify-center mb-8 relative">
+                            <div class="service-icon p-6 bg-primary-50 dark:bg-primary-900/30 rounded-2xl relative overflow-hidden">
+                                <i data-feather="smartphone" class="w-12 h-12 text-primary-600 dark:text-primary-400"></i>
+                                <div class="absolute inset-0 bg-gradient-to-r from-primary-400/20 to-transparent"></div>
+                            </div>
+                        </div>
+                        <h3 class="text-2xl font-bold text-center mb-4 bg-gradient-to-r from-primary-600 to-primary-400 bg-clip-text text-transparent">Mobile Development</h3>
+                        <p class="text-gray-600 dark:text-gray-300 text-center mb-6">Building native and cross-platform mobile applications.</p>
+                        <ul class="space-y-3">
+                            <li class="flex items-center p-3 bg-gray-50 dark:bg-gray-700/50 rounded-xl transition-colors">
+                                <i data-feather="check-circle" class="w-5 h-5 text-green-500 mr-3"></i>
+                                <span>iOS & Android Development</span>
+                            </li>
+                            <li class="flex items-center p-3 bg-gray-50 dark:bg-gray-700/50 rounded-xl transition-colors">
+                                <i data-feather="check-circle" class="w-5 h-5 text-green-500 mr-3"></i>
+                                <span>React Native Solutions</span>
+                            </li>
+                            <li class="flex items-center p-3 bg-gray-50 dark:bg-gray-700/50 rounded-xl transition-colors">
+                                <i data-feather="check-circle" class="w-5 h-5 text-green-500 mr-3"></i>
+                                <span>App Store Optimization</span>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- API Integration -->
+                <div class="service-card gradient-border bg-white dark:bg-gray-800 rounded-2xl shadow-lg overflow-hidden border border-gray-100 dark:border-gray-700">
+                    <div class="p-8">
+                        <div class="flex justify-center mb-8 relative">
+                            <div class="service-icon p-6 bg-primary-50 dark:bg-primary-900/30 rounded-2xl relative overflow-hidden">
+                                <i data-feather="server" class="w-12 h-12 text-primary-600 dark:text-primary-400"></i>
+                                <div class="absolute inset-0 bg-gradient-to-r from-primary-400/20 to-transparent"></div>
+                            </div>
+                        </div>
+                        <h3 class="text-2xl font-bold text-center mb-4 bg-gradient-to-r from-primary-600 to-primary-400 bg-clip-text text-transparent">API Integration</h3>
+                        <p class="text-gray-600 dark:text-gray-300 text-center mb-6">Seamless integration of third-party services and custom API development.</p>
+                        <ul class="space-y-3">
+                            <li class="flex items-center p-3 bg-gray-50 dark:bg-gray-700/50 rounded-xl transition-colors">
+                                <i data-feather="check-circle" class="w-5 h-5 text-green-500 mr-3"></i>
+                                <span>RESTful API Development</span>
+                            </li>
+                            <li class="flex items-center p-3 bg-gray-50 dark:bg-gray-700/50 rounded-xl transition-colors">
+                                <i data-feather="check-circle" class="w-5 h-5 text-green-500 mr-3"></i>
+                                <span>Third-party Integrations</span>
+                            </li>
+                            <li class="flex items-center p-3 bg-gray-50 dark:bg-gray-700/50 rounded-xl transition-colors">
+                                <i data-feather="check-circle" class="w-5 h-5 text-green-500 mr-3"></i>
+                                <span>API Documentation</span>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- AI Development -->
+                <div class="service-card gradient-border bg-white dark:bg-gray-800 rounded-2xl shadow-lg overflow-hidden border border-gray-100 dark:border-gray-700">
+                    <div class="p-8">
+                        <div class="flex justify-center mb-8 relative">
+                            <div class="service-icon p-6 bg-primary-50 dark:bg-primary-900/30 rounded-2xl relative overflow-hidden">
+                                <i data-feather="cpu" class="w-12 h-12 text-primary-600 dark:text-primary-400"></i>
+                                <div class="absolute inset-0 bg-gradient-to-r from-primary-400/20 to-transparent"></div>
+                            </div>
+                        </div>
+                        <h3 class="text-2xl font-bold text-center mb-4 bg-gradient-to-r from-primary-600 to-primary-400 bg-clip-text text-transparent">AI Development</h3>
+                        <p class="text-gray-600 dark:text-gray-300 text-center mb-6">Implementing cutting-edge artificial intelligence solutions.</p>
+                        <ul class="space-y-3">
+                            <li class="flex items-center p-3 bg-gray-50 dark:bg-gray-700/50 rounded-xl transition-colors">
+                                <i data-feather="check-circle" class="w-5 h-5 text-green-500 mr-3"></i>
+                                <span>Natural Language Processing</span>
+                            </li>
+                            <li class="flex items-center p-3 bg-gray-50 dark:bg-gray-700/50 rounded-xl transition-colors">
+                                <i data-feather="check-circle" class="w-5 h-5 text-green-500 mr-3"></i>
+                                <span>Computer Vision</span>
+                            </li>
+                            <li class="flex items-center p-3 bg-gray-50 dark:bg-gray-700/50 rounded-xl transition-colors">
+                                <i data-feather="check-circle" class="w-5 h-5 text-green-500 mr-3"></i>
+                                <span>Predictive Analytics</span>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Machine Learning -->
+                <div class="service-card gradient-border bg-white dark:bg-gray-800 rounded-2xl shadow-lg overflow-hidden border border-gray-100 dark:border-gray-700">
+                    <div class="p-8">
+                        <div class="flex justify-center mb-8 relative">
+                            <div class="service-icon p-6 bg-primary-50 dark:bg-primary-900/30 rounded-2xl relative overflow-hidden">
+                                <i data-feather="layers" class="w-12 h-12 text-primary-600 dark:text-primary-400"></i>
+                                <div class="absolute inset-0 bg-gradient-to-r from-primary-400/20 to-transparent"></div>
+                            </div>
+                        </div>
+                        <h3 class="text-2xl font-bold text-center mb-4 bg-gradient-to-r from-primary-600 to-primary-400 bg-clip-text text-transparent">Machine Learning</h3>
+                        <p class="text-gray-600 dark:text-gray-300 text-center mb-6">Advanced ML solutions for data-driven decision making.</p>
+                        <ul class="space-y-3">
+                            <li class="flex items-center p-3 bg-gray-50 dark:bg-gray-700/50 rounded-xl transition-colors">
+                                <i data-feather="check-circle" class="w-5 h-5 text-green-500 mr-3"></i>
+                                <span>Deep Learning Models</span>
+                            </li>
+                            <li class="flex items-center p-3 bg-gray-50 dark:bg-gray-700/50 rounded-xl transition-colors">
+                                <i data-feather="check-circle" class="w-5 h-5 text-green-500 mr-3"></i>
+                                <span>Pattern Recognition</span>
+                            </li>
+                            <li class="flex items-center p-3 bg-gray-50 dark:bg-gray-700/50 rounded-xl transition-colors">
+                                <i data-feather="check-circle" class="w-5 h-5 text-green-500 mr-3"></i>
+                                <span>Data Mining & Analysis</span>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Software QA -->
+                <div class="service-card gradient-border bg-white dark:bg-gray-800 rounded-2xl shadow-lg overflow-hidden border border-gray-100 dark:border-gray-700">
+                    <div class="p-8">
+                        <div class="flex justify-center mb-8 relative">
+                            <div class="service-icon p-6 bg-primary-50 dark:bg-primary-900/30 rounded-2xl relative overflow-hidden">
+                                <i data-feather="shield" class="w-12 h-12 text-primary-600 dark:text-primary-400"></i>
+                                <div class="absolute inset-0 bg-gradient-to-r from-primary-400/20 to-transparent"></div>
+                            </div>
+                        </div>
+                        <h3 class="text-2xl font-bold text-center mb-4 bg-gradient-to-r from-primary-600 to-primary-400 bg-clip-text text-transparent">Software QA</h3>
+                        <p class="text-gray-600 dark:text-gray-300 text-center mb-6">Ensuring software quality through comprehensive testing.</p>
+                        <ul class="space-y-3">
+                            <li class="flex items-center p-3 bg-gray-50 dark:bg-gray-700/50 rounded-xl transition-colors">
+                                <i data-feather="check-circle" class="w-5 h-5 text-green-500 mr-3"></i>
+                                <span>Automated Testing</span>
+                            </li>
+                            <li class="flex items-center p-3 bg-gray-50 dark:bg-gray-700/50 rounded-xl transition-colors">
+                                <i data-feather="check-circle" class="w-5 h-5 text-green-500 mr-3"></i>
+                                <span>Performance Testing</span>
+                            </li>
+                            <li class="flex items-center p-3 bg-gray-50 dark:bg-gray-700/50 rounded-xl transition-colors">
+                                <i data-feather="check-circle" class="w-5 h-5 text-green-500 mr-3"></i>
+                                <span>Security Testing</span>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Quality Testing -->
+                <div class="service-card gradient-border bg-white dark:bg-gray-800 rounded-2xl shadow-lg overflow-hidden border border-gray-100 dark:border-gray-700">
+                    <div class="p-8">
+                        <div class="flex justify-center mb-8 relative">
+                            <div class="service-icon p-6 bg-primary-50 dark:bg-primary-900/30 rounded-2xl relative overflow-hidden">
+                                <i data-feather="check-square" class="w-12 h-12 text-primary-600 dark:text-primary-400"></i>
+                                <div class="absolute inset-0 bg-gradient-to-r from-primary-400/20 to-transparent"></div>
+                            </div>
+                        </div>
+                        <h3 class="text-2xl font-bold text-center mb-4 bg-gradient-to-r from-primary-600 to-primary-400 bg-clip-text text-transparent">Quality Testing</h3>
+                        <p class="text-gray-600 dark:text-gray-300 text-center mb-6">Comprehensive testing solutions for quality assurance.</p>
+                        <ul class="space-y-3">
+                            <li class="flex items-center p-3 bg-gray-50 dark:bg-gray-700/50 rounded-xl transition-colors">
+                                <i data-feather="check-circle" class="w-5 h-5 text-green-500 mr-3"></i>
+                                <span>Integration Testing</span>
+                            </li>
+                            <li class="flex items-center p-3 bg-gray-50 dark:bg-gray-700/50 rounded-xl transition-colors">
+                                <i data-feather="check-circle" class="w-5 h-5 text-green-500 mr-3"></i>
+                                <span>User Acceptance Testing</span>
+                            </li>
+                            <li class="flex items-center p-3 bg-gray-50 dark:bg-gray-700/50 rounded-xl transition-colors">
+                                <i data-feather="check-circle" class="w-5 h-5 text-green-500 mr-3"></i>
+                                <span>Test Automation Framework</span>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <!-- Enhanced Why Choose Me Section -->
+    <section class="py-24 bg-white dark:bg-gray-800 relative overflow-hidden">
+        <div class="absolute inset-0 bg-grid-primary-600/[0.03] dark:bg-grid-white/[0.02]"></div>
+        <div class="container mx-auto px-6 relative">
+            <h2 class="text-4xl font-bold text-center mb-16 bg-gradient-to-r from-primary-600 to-primary-400 bg-clip-text text-transparent">Why Choose My Services?</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+                <!-- Feature 1 -->
+                <div class="feature-item p-8 bg-gray-50 dark:bg-gray-700 rounded-2xl text-center group hover:bg-primary-50 dark:hover:bg-primary-900/30 transition-all duration-300">
+                    <div class="flex justify-center mb-6">
+                        <div class="p-4 bg-white dark:bg-gray-800 rounded-2xl shadow-lg group-hover:scale-110 transition-transform duration-300">
+                            <i data-feather="clock" class="w-10 h-10 text-primary-600 dark:text-primary-400"></i>
+                        </div>
+                    </div>
+                    <h3 class="text-xl font-semibold mb-4">Fast Delivery</h3>
+                    <p class="text-gray-600 dark:text-gray-300">Swift project completion without compromising quality</p>
+                </div>
+
+                <!-- Feature 2 -->
+                <div class="feature-item p-8 bg-gray-50 dark:bg-gray-700 rounded-2xl text-center group hover:bg-primary-50 dark:hover:bg-primary-900/30 transition-all duration-300">
+                    <div class="flex justify-center mb-6">
+                        <div class="p-4 bg-white dark:bg-gray-800 rounded-2xl shadow-lg group-hover:scale-110 transition-transform duration-300">
+                            <i data-feather="shield" class="w-10 h-10 text-primary-600 dark:text-primary-400"></i>
+                        </div>
+                    </div>
+                    <h3 class="text-xl font-semibold mb-4">Secure & Reliable</h3>
+                    <p class="text-gray-600 dark:text-gray-300">Enterprise-grade security and dependable solutions</p>
+                </div>
+
+                <!-- Feature 3 -->
+                <div class="feature-item p-8 bg-gray-50 dark:bg-gray-700 rounded-2xl text-center group hover:bg-primary-50 dark:hover:bg-primary-900/30 transition-all duration-300">
+                    <div class="flex justify-center mb-6">
+                        <div class="p-4 bg-white dark:bg-gray-800 rounded-2xl shadow-lg group-hover:scale-110 transition-transform duration-300">
+                            <i data-feather="headphones" class="w-10 h-10 text-primary-600 dark:text-primary-400"></i>
+                        </div>
+                    </div>
+                    <h3 class="text-xl font-semibold mb-4">24/7 Support</h3>
+                    <p class="text-gray-600 dark:text-gray-300">Round-the-clock technical support and assistance</p>
+                </div>
+
+                <!-- Feature 4 -->
+                <div class="feature-item p-8 bg-gray-50 dark:bg-gray-700 rounded-2xl text-center group hover:bg-primary-50 dark:hover:bg-primary-900/30 transition-all duration-300">
+                    <div class="flex justify-center mb-6">
+                        <div class="p-4 bg-white dark:bg-gray-800 rounded-2xl shadow-lg group-hover:scale-110 transition-transform duration-300">
+                            <i data-feather="dollar-sign" class="w-10 h-10 text-primary-600 dark:text-primary-400"></i>
+                        </div>
+                    </div>
+                    <h3 class="text-xl font-semibold mb-4">Competitive Pricing</h3>
+                    <p class="text-gray-600 dark:text-gray-300">Flexible payment options with transparent pricing</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Enhanced CTA Section -->
+    <section class="py-32 bg-primary-600 dark:bg-primary-800 relative overflow-hidden">
+        <div class="absolute inset-0 bg-gradient-to-r from-primary-600/90 to-primary-800/90"></div>
+        <div class="absolute inset-0 bg-grid-white/[0.05]"></div>
+        <div class="container mx-auto px-6 relative z-10">
+            <div class="max-w-4xl mx-auto text-center">
+                <h2 class="text-5xl font-bold text-white mb-8">Ready to Transform Your Ideas into Reality?</h2>
+                <p class="text-xl text-primary-100 mb-12">Let's collaborate to build something extraordinary together. Get in touch for a detailed consultation about your project.</p>
+                <div class="flex flex-col sm:flex-row justify-center gap-6">
+                    <a href="/hire" class="group inline-flex items-center justify-center bg-white text-primary-600 hover:bg-primary-50 px-8 py-4 rounded-full font-semibold transition-all duration-300 shadow-lg hover:shadow-xl">
+                        <i data-feather="mail" class="w-5 h-5 mr-2 group-hover:scale-110 transition-transform"></i>
+                        Start a Project
+                    </a>
+                    <a href="/work" class="group inline-flex items-center justify-center border-2 border-white text-white hover:bg-white hover:text-primary-600 px-8 py-4 rounded-full font-semibold transition-all duration-300">
+                        <i data-feather="folder" class="w-5 h-5 mr-2 group-hover:scale-110 transition-transform"></i>
+                        View Portfolio
+                    </a>
+                </div>
+            </div>
+        </div>
+        <div class="absolute bottom-0 left-0 right-0 h-20 bg-gradient-to-b from-transparent to-gray-100 dark:to-gray-900"></div>
+    </section>
+</main>
+
+<!-- Keep existing scripts section -->
+<script>
+    // Dark Mode Toggle
+    function initDarkMode() {
+        const darkModeToggle = document.getElementById('darkModeToggle');
+        const html = document.documentElement;
+
+        function setDarkMode(isDark) {
+            if (isDark) {
+                html.classList.add('dark');
+                localStorage.setItem('darkMode', 'true');
+            } else {
+                html.classList.remove('dark');
+                localStorage.setItem('darkMode', 'false');
+            }
+            feather.replace();
+        }
+
+        const savedDarkMode = localStorage.getItem('darkMode');
+        const prefersDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches;
+
+        if (savedDarkMode === 'true' || (savedDarkMode === null && prefersDarkMode)) {
+            setDarkMode(true);
+        }
+
+        darkModeToggle.addEventListener('click', () => {
+            const isDark = !html.classList.contains('dark');
+            setDarkMode(isDark);
+        });
+    }
+
+    // Sidebar Toggle
+    function initSidebar() {
+        const menuToggle = document.getElementById('menuToggle');
+        const sidebar = document.getElementById('sidebar');
+        const overlay = document.getElementById('overlay');
+
+        menuToggle.addEventListener('click', () => {
+            sidebar.classList.toggle('-translate-x-full');
+            overlay.classList.toggle('hidden');
+        });
+
+        overlay.addEventListener('click', () => {
+            sidebar.classList.add('-translate-x-full');
+            overlay.classList.add('hidden');
+        });
+    }
+
+    // Scroll Animation
+    function initScrollAnimation() {
+        const cards = document.querySelectorAll('.service-card, .feature-item');
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.opacity = '1';
+                    entry.target.style.transform = 'translateY(0)';
+                }
+            });
+        }, {
+            threshold: 0.1
+        });
+
+        cards.forEach(card => {
+            card.style.opacity = '0';
+            card.style.transform = 'translateY(20px)';
+            observer.observe(card);
+        });
+    }
+
+    // Initialize when DOM is loaded
+    document.addEventListener('DOMContentLoaded', () => {
+        feather.replace();
+        initDarkMode();
+        initSidebar();
+        initScrollAnimation();
+    });
+</script>
+</body>
+</html>

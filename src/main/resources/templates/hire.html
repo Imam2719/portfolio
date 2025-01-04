@@ -1,0 +1,821 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Hire Me - Portfolio</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/feather-icons/4.28.0/feather.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        primary: {"50":"#f0f9ff","100":"#e0f2fe","200":"#bae6fd","300":"#7dd3fc","400":"#38bdf8","500":"#0ea5e9","600":"#0284c7","700":"#0369a1","800":"#075985","900":"#0c4a6e","950":"#082f49"}
+                    },
+                    fontFamily: {
+                        'body': ['Poppins', 'ui-sans-serif', 'system-ui'],
+                        'sans': ['Poppins', 'ui-sans-serif', 'system-ui']
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        /* Existing styles preserved */
+        body { font-family: 'Poppins', sans-serif; }
+        .pricing-card {
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+        }
+        .pricing-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+            transition: 0.5s;
+        }
+        .pricing-card:hover::before { left: 100%; }
+        .pricing-card:hover {
+            transform: translateY(-12px);
+            box-shadow: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
+        }
+
+        /* New enhanced animations */
+        .fade-up {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 0.6s ease-out;
+        }
+
+        .fade-up.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .service-icon {
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .service-icon::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: radial-gradient(circle at center, rgba(14, 165, 233, 0.2), transparent);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .service-icon:hover::after {
+            opacity: 1;
+        }
+
+        .service-icon:hover {
+            transform: scale(1.1);
+        }
+
+        .gradient-text {
+            background: linear-gradient(135deg, #0ea5e9, #38bdf8);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            position: relative;
+            display: inline-block;
+        }
+
+        .gradient-text::after {
+            content: '';
+            position: absolute;
+            left: 0;
+            bottom: -2px;
+            width: 100%;
+            height: 2px;
+            background: linear-gradient(90deg, #0ea5e9, transparent);
+            transform: scaleX(0);
+            transform-origin: left;
+            transition: transform 0.3s ease;
+        }
+
+        .gradient-text:hover::after {
+            transform: scaleX(1);
+        }
+
+        /* Enhanced form inputs */
+        .form-input {
+            transition: all 0.3s ease;
+            background: linear-gradient(to right, #f0f9ff, #e0f2fe);
+            background-size: 200% 100%;
+            background-position: 100% 0;
+        }
+
+        .form-input:focus {
+            background-position: 0 0;
+            transform: translateY(-2px);
+        }
+
+        /* Particle animation for hero section */
+        .particle {
+            position: absolute;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.1);
+            pointer-events: none;
+            transform-origin: center;
+        }
+
+        @keyframes float-particle {
+            0%, 100% { transform: translateY(0) rotate(0deg); }
+            50% { transform: translateY(-20px) rotate(180deg); }
+        }
+
+        /* Enhanced process step connection */
+        .process-step::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            right: -25%;
+            width: 50%;
+            height: 2px;
+            background: linear-gradient(90deg, #0ea5e9 50%, transparent);
+            transform: translateY(-50%);
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+    </style>
+</head>
+<body class="bg-gradient-to-br from-gray-50 to-gray-100 dark:from-gray-900 dark:to-gray-800 text-gray-800 dark:text-gray-200 transition-all duration-300">
+
+<!-- Navbar -->
+<nav class="bg-white/80 dark:bg-gray-800/80 backdrop-blur-md shadow-lg fixed w-full top-0 z-[100] transition-all duration-300">
+    <div class="container mx-auto flex justify-between items-center py-4 px-4 sm:px-6">
+        <div class="flex items-center space-x-4">
+            <button id="menuToggle" class="p-2 rounded-xl hover:bg-primary-100 dark:hover:bg-gray-700 transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-primary-500 group">
+                <i data-feather="menu" class="w-6 h-6 group-hover:stroke-primary-600"></i>
+            </button>
+            <h1 class="text-xl sm:text-2xl md:text-3xl font-bold bg-gradient-to-r from-primary-600 to-primary-400 dark:from-primary-400 dark:to-primary-200 bg-clip-text text-transparent">Portfolio</h1>
+        </div>
+        <div class="flex items-center space-x-3">
+            <a href="/cv.png" download class="flex items-center space-x-2 px-4 py-2 text-sm bg-primary-600 hover:bg-primary-700 text-white rounded-xl transition-all duration-300 shadow-md hover:shadow-lg transform hover:-translate-y-0.5">
+                <i data-feather="download" class="w-4 h-4"></i>
+                <span class="hidden sm:inline">Download CV</span>
+            </a>
+            <button id="darkModeToggle" class="p-2 rounded-xl hover:bg-primary-100 dark:hover:bg-gray-700 transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-primary-500">
+                <i data-feather="moon" class="hidden dark:block w-5 h-5"></i>
+                <i data-feather="sun" class="block dark:hidden w-5 h-5"></i>
+            </button>
+        </div>
+    </div>
+</nav>
+
+<!-- Mobile Overlay -->
+<div id="overlay" class="fixed inset-0 bg-black/50 backdrop-blur-sm z-[80] hidden transition-opacity duration-300"></div>
+
+<!-- Sidebar Menu -->
+<aside id="sidebar" class="fixed left-0 top-0 h-screen w-72 bg-white/90 dark:bg-gray-800/90 backdrop-blur-md shadow-2xl z-[90] transform -translate-x-full transition-transform duration-300 ease-in-out">
+    <div class="h-[64px]"></div>
+    <div class="flex flex-col h-[calc(100%-64px)] overflow-y-auto">
+        <ul class="flex-1 px-4 py-4 space-y-2">
+            <li>
+                <a href="/overview" class="flex items-center space-x-3 px-4 py-3 rounded-xl text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors duration-300">
+                    <i data-feather="home" class="w-5 h-5"></i>
+                    <span class="font-medium">Overview</span>
+                </a>
+            </li>
+            <li>
+                <a href="/about" class="flex items-center space-x-3 px-4 py-3 rounded-xl text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors duration-300">
+                    <i data-feather="user" class="w-5 h-5"></i>
+                    <span class="font-medium">About me</span>
+                </a>
+            </li>
+            <li>
+                <a href="/skills" class="flex items-center space-x-3 px-4 py-3 rounded-xl text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors duration-300">
+                    <i data-feather="award" class="w-5 h-5"></i>
+                    <span class="font-medium">Skills & Certifications</span>
+                </a>
+            </li>
+            <li>
+                <a href="/services" class="flex items-center space-x-3 px-4 py-3 rounded-xl text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors duration-300">
+                    <i data-feather="briefcase" class="w-5 h-5"></i>
+                    <span class="font-medium">My Services</span>
+                </a>
+            </li>
+            <li>
+                <a href="/work" class="flex items-center space-x-3 px-4 py-3 rounded-xl text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors duration-300">
+                    <i data-feather="folder" class="w-5 h-5"></i>
+                    <span class="font-medium">My Work</span>
+                </a>
+            </li>
+            <li>
+                <a href="/hire" class="flex items-center space-x-3 px-4 py-3 rounded-xl text-primary-600 bg-primary-50 dark:bg-primary-900/30 dark:text-primary-400">
+                    <i data-feather="mail" class="w-5 h-5"></i>
+                    <span class="font-medium">Hire me</span>
+                </a>
+            </li>
+        </ul>
+        <div class="p-4 mt-auto">
+            <div class="bg-gradient-to-r from-primary-500 to-primary-600 rounded-xl p-4 text-white">
+                <h4 class="font-semibold mb-2">Need help?</h4>
+                <p class="text-sm text-primary-100 mb-3">Contact me for consultancy</p>
+                <a href="/hire" class="inline-flex items-center space-x-2 bg-white text-primary-600 px-3 py-2 rounded-lg text-sm font-medium hover:bg-primary-50 transition-colors duration-300">
+                    <i data-feather="message-circle" class="w-4 h-4"></i>
+                    <span>Let's Talk</span>
+                </a>
+            </div>
+        </div>
+    </div>
+</aside>
+
+<!-- Main Content -->
+<main class="pt-16">
+    <!-- Hero Section -->
+    <section class="bg-primary-600 dark:bg-primary-800 text-white py-32 relative overflow-hidden" id="heroSection">
+        <div class="absolute inset-0 bg-gradient-to-r from-primary-600/90 to-primary-800/90"></div>
+        <div id="particles" class="absolute inset-0"></div>
+        <div class="container mx-auto px-6 relative z-10">
+            <div class="text-center max-w-4xl mx-auto fade-up">
+                <h1 class="text-6xl font-bold mb-6 leading-tight animate-title">Let's Work Together</h1>
+                <p class="text-2xl max-w-2xl mx-auto mb-12 text-primary-100 animate-subtitle">Ready to bring your ideas to life? Let's create something extraordinary together!</p>
+            </div>
+        </div>
+        <div class="absolute bottom-0 left-0 right-0 h-20 bg-gradient-to-b from-transparent to-gray-100 dark:to-gray-900"></div>
+    </section>
+
+
+    <!-- Work Process -->
+    <section class="py-24 bg-white dark:bg-gray-800 relative overflow-hidden">
+        <div class="absolute inset-0 bg-grid-primary-600/[0.03] dark:bg-grid-white/[0.02]"></div>
+        <div class="container mx-auto px-6 relative">
+            <h2 class="text-4xl font-bold text-center mb-16 bg-gradient-to-r from-primary-600 to-primary-400 bg-clip-text text-transparent">How We'll Work Together</h2>
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
+                <!-- Process Step 1 -->
+                <div class="process-step group">
+                    <div class="text-center">
+                        <div class="flex justify-center mb-6">
+                            <div class="service-icon p-6 bg-primary-50 dark:bg-primary-900/30 rounded-2xl relative overflow-hidden group-hover:scale-110 transition-transform duration-300">
+                                <i data-feather="coffee" class="w-12 h-12 text-primary-600 dark:text-primary-400"></i>
+                                <div class="absolute inset-0 bg-gradient-to-r from-primary-400/20 to-transparent"></div>
+                            </div>
+                        </div>
+                        <h3 class="text-xl font-bold mb-4 bg-gradient-to-r from-primary-600 to-primary-400 bg-clip-text text-transparent">1. Initial Discussion</h3>
+                        <p class="text-gray-600 dark:text-gray-300">We'll discuss your project requirements and goals in detail</p>
+                    </div>
+                </div>
+
+                <!-- Process Step 2 -->
+                <div class="process-step group">
+                    <div class="text-center">
+                        <div class="flex justify-center mb-6">
+                            <div class="service-icon p-6 bg-primary-50 dark:bg-primary-900/30 rounded-2xl relative overflow-hidden group-hover:scale-110 transition-transform duration-300">
+                                <i data-feather="edit" class="w-12 h-12 text-primary-600 dark:text-primary-400"></i>
+                                <div class="absolute inset-0 bg-gradient-to-r from-primary-400/20 to-transparent"></div>
+                            </div>
+                        </div>
+                        <h3 class="text-xl font-bold mb-4 bg-gradient-to-r from-primary-600 to-primary-400 bg-clip-text text-transparent">2. Planning</h3>
+                        <p class="text-gray-600 dark:text-gray-300">Creating detailed project plan and timeline for success</p>
+                    </div>
+                </div>
+
+                <!-- Process Step 3 -->
+                <div class="process-step group">
+                    <div class="text-center">
+                        <div class="flex justify-center mb-6">
+                            <div class="service-icon p-6 bg-primary-50 dark:bg-primary-900/30 rounded-2xl relative overflow-hidden group-hover:scale-110 transition-transform duration-300">
+                                <i data-feather="code" class="w-12 h-12 text-primary-600 dark:text-primary-400"></i>
+                                <div class="absolute inset-0 bg-gradient-to-r from-primary-400/20 to-transparent"></div>
+                            </div>
+                        </div>
+                        <h3 class="text-xl font-bold mb-4 bg-gradient-to-r from-primary-600 to-primary-400 bg-clip-text text-transparent">3. Development</h3>
+                        <p class="text-gray-600 dark:text-gray-300">Building your project with regular updates and feedback</p>
+                    </div>
+                </div>
+
+                <!-- Process Step 4 -->
+                <div class="process-step group">
+                    <div class="text-center">
+                        <div class="flex justify-center mb-6">
+                            <div class="service-icon p-6 bg-primary-50 dark:bg-primary-900/30 rounded-2xl relative overflow-hidden group-hover:scale-110 transition-transform duration-300">
+                                <i data-feather="check-circle" class="w-12 h-12 text-primary-600 dark:text-primary-400"></i>
+                                <div class="absolute inset-0 bg-gradient-to-r from-primary-400/20 to-transparent"></div>
+                            </div>
+                        </div>
+                        <h3 class="text-xl font-bold mb-4 bg-gradient-to-r from-primary-600 to-primary-400 bg-clip-text text-transparent">4. Delivery</h3>
+                        <p class="text-gray-600 dark:text-gray-300">Final testing, optimization and project handover</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Pricing Plans -->
+    <section class="py-24 bg-gray-100 dark:bg-gray-900">
+        <div class="container mx-auto px-6">
+            <h2 class="text-4xl font-bold text-center mb-16 bg-gradient-to-r from-primary-600 to-primary-400 bg-clip-text text-transparent">Investment Plans</h2>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <!-- Basic Plan -->
+                <div class="pricing-card gradient-border bg-white dark:bg-gray-800 rounded-2xl shadow-lg overflow-hidden border border-gray-100 dark:border-gray-700">
+                    <div class="p-8">
+                        <div class="flex justify-center mb-6">
+                            <div class="service-icon p-4 bg-primary-50 dark:bg-primary-900/30 rounded-2xl">
+                                <i data-feather="package" class="w-12 h-12 text-primary-600 dark:text-primary-400"></i>
+                            </div>
+                        </div>
+                        <h3 class="text-2xl font-bold text-center mb-4 bg-gradient-to-r from-primary-600 to-primary-400 bg-clip-text text-transparent">Basic</h3>
+                        <div class="text-center mb-8">
+                            <span class="text-4xl font-bold text-gray-900 dark:text-gray-100">$499</span>
+                            <span class="text-gray-600 dark:text-gray-400">/project</span>
+                        </div>
+                        <ul class="space-y-4 mb-8">
+                            <li class="flex items-center text-gray-600 dark:text-gray-300">
+                                <i data-feather="check" class="w-5 h-5 text-green-500 mr-3"></i>
+                                <span>Single Page Application</span>
+                            </li>
+                            <li class="flex items-center text-gray-600 dark:text-gray-300">
+                                <i data-feather="check" class="w-5 h-5 text-green-500 mr-3"></i>
+                                <span>Responsive Design</span>
+                            </li>
+                            <li class="flex items-center text-gray-600 dark:text-gray-300">
+                                <i data-feather="check" class="w-5 h-5 text-green-500 mr-3"></i>
+                                <span>3 Rounds of Revisions</span>
+                            </li>
+                        </ul>
+                        <button class="w-full bg-primary-600 text-white py-3 px-6 rounded-xl hover:bg-primary-700 transition-colors duration-300 shadow-lg hover:shadow-xl transform hover:-translate-y-0.5">
+                            Get Started
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Pro Plan -->
+                <div class="pricing-card gradient-border bg-white dark:bg-gray-800 rounded-2xl shadow-lg overflow-hidden border-2 border-primary-500">
+                    <div class="p-8">
+                        <div class="absolute top-4 right-4">
+                            <span class="bg-primary-500 text-white px-3 py-1 rounded-full text-sm">Popular</span>
+                        </div>
+                        <div class="flex justify-center mb-6">
+                            <div class="service-icon p-4 bg-primary-50 dark:bg-primary-900/30 rounded-2xl">
+                                <i data-feather="award" class="w-12 h-12 text-primary-600 dark:text-primary-400"></i>
+                            </div>
+                        </div>
+                        <h3 class="text-2xl font-bold text-center mb-4 bg-gradient-to-r from-primary-600 to-primary-400 bg-clip-text text-transparent">Professional</h3>
+                        <div class="text-center mb-8">
+                            <span class="text-4xl font-bold text-gray-900 dark:text-gray-100">$999</span>
+                            <span class="text-gray-600 dark:text-gray-400">/project</span>
+                        </div>
+                        <ul class="space-y-4 mb-8">
+                            <li class="flex items-center text-gray-600 dark:text-gray-300">
+                                <i data-feather="check" class="w-5 h-5 text-green-500 mr-3"></i>
+                                <span>Multi-page Application</span>
+                            </li>
+                            <li class="flex items-center text-gray-600 dark:text-gray-300">
+                                <i data-feather="check" class="w-5 h-5 text-green-500 mr-3"></i>
+                                <span>Custom Features</span>
+                            </li>
+                            <li class="flex items-center text-gray-600 dark:text-gray-300">
+                                <i data-feather="check" class="w-5 h-5 text-green-500 mr-3"></i>
+                                <span>Unlimited Revisions</span>
+                            </li>
+                            <li class="flex items-center text-gray-600 dark:text-gray-300">
+                                <i data-feather="check" class="w-5 h-5 text-green-500 mr-3"></i>
+                                <span>SEO Optimization</span>
+                            </li>
+                        </ul>
+                        <button class="w-full bg-primary-600 text-white py-3 px-6 rounded-xl hover:bg-primary-700 transition-colors duration-300 shadow-lg hover:shadow-xl transform hover:-translate-y-0.5">
+                            Get Started
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Enterprise Plan -->
+                <div class="pricing-card gradient-border bg-white dark:bg-gray-800 rounded-2xl shadow-lg overflow-hidden border border-gray-100 dark:border-gray-700">
+                    <div class="p-8">
+                        <div class="flex justify-center mb-6">
+                            <div class="service-icon p-4 bg-primary-50 dark:bg-primary-900/30 rounded-2xl">
+                                <i data-feather="briefcase" class="w-12 h-12 text-primary-600 dark:text-primary-400"></i>
+                            </div>
+                        </div>
+                        <h3 class="text-2xl font-bold text-center mb-4 bg-gradient-to-r from-primary-600 to-primary-400 bg-clip-text text-transparent">Enterprise</h3>
+                        <div class="text-center mb-8">
+                            <span class="text-4xl font-bold text-gray-900 dark:text-gray-100">Custom</span>
+                            <span class="text-gray-600 dark:text-gray-400">/project</span>
+                        </div>
+                        <ul class="space-y-4 mb-8">
+                            <li class="flex items-center text-gray-600 dark:text-gray-300">
+                                <i data-feather="check" class="w-5 h-5 text-green-500 mr-3"></i>
+                                <span>Custom Solutions</span>
+                            </li>
+                            <li class="flex items-center text-gray-600 dark:text-gray-300">
+                                <i data-feather="check" class="w-5 h-5 text-green-500 mr-3"></i>
+                                <span>Advanced Features</span>
+                            </li>
+                            <li class="flex items-center text-gray-600 dark:text-gray-300">
+                                <i data-feather="check" class="w-5 h-5 text-green-500 mr-3"></i>
+                                <span>Priority Support</span>
+                            </li>
+                            <li class="flex items-center text-gray-600 dark:text-gray-300">
+                                <i data-feather="check" class="w-5 h-5 text-green-500 mr-3"></i>
+                                <span>Dedicated Manager</span>
+                            </li>
+                        </ul>
+                        <button class="w-full bg-primary-600 text-white py-3 px-6 rounded-xl hover:bg-primary-700 transition-colors duration-300 shadow-lg hover:shadow-xl transform hover:-translate-y-0.5">
+                            Contact Me
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact Form Section -->
+    <!-- Contact Form Section -->
+    <section class="py-24 bg-white dark:bg-gray-800 relative overflow-hidden">
+        <div class="absolute inset-0 bg-grid-primary-600/[0.03] dark:bg-grid-white/[0.02]"></div>
+        <div class="container mx-auto px-6 relative">
+            <div class="max-w-4xl mx-auto">
+                <h2 class="text-4xl font-bold text-center mb-16 bg-gradient-to-r from-primary-600 to-primary-400 bg-clip-text text-transparent">Get In Touch</h2>
+
+                <form action="/submit-contact" method="post" class="gradient-border bg-white dark:bg-gray-800 rounded-2xl shadow-lg p-8 border border-gray-100 dark:border-gray-700">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-8">
+                        <div>
+                            <label for="name" class="block text-gray-700 dark:text-gray-300 font-medium mb-2">Your Name *</label>
+                            <input type="text" id="name" name="name" required
+                                   class="w-full px-4 py-3 rounded-xl border border-gray-300 dark:border-gray-600 focus:outline-none focus:ring-2 focus:ring-primary-600 dark:bg-gray-700 dark:text-gray-100">
+                        </div>
+                        <div>
+                            <label for="email" class="block text-gray-700 dark:text-gray-300 font-medium mb-2">Email Address *</label>
+                            <input type="email" id="email" name="email" required
+                                   class="w-full px-4 py-3 rounded-xl border border-gray-300 dark:border-gray-600 focus:outline-none focus:ring-2 focus:ring-primary-600 dark:bg-gray-700 dark:text-gray-100">
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-8">
+                        <div>
+                            <label for="projectType" class="block text-gray-700 dark:text-gray-300 font-medium mb-2">Project Type *</label>
+                            <select id="projectType" name="projectType" required
+                                    class="w-full px-4 py-3 rounded-xl border border-gray-300 dark:border-gray-600 focus:outline-none focus:ring-2 focus:ring-primary-600 dark:bg-gray-700 dark:text-gray-100">
+                                <option value="">Select a project type</option>
+                                <option value="Website Development">Website Development</option>
+                                <option value="Mobile App Development">Mobile App Development</option>
+                                <option value="Software Testing">Software Testing</option>
+                                <option value="AI/ML Solution">AI/ML Solution</option>
+                                <option value="Other">Other</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label for="budget" class="block text-gray-700 dark:text-gray-300 font-medium mb-2">Budget Range *</label>
+                            <select id="budget" name="budget" required
+                                    class="w-full px-4 py-3 rounded-xl border border-gray-300 dark:border-gray-600 focus:outline-none focus:ring-2 focus:ring-primary-600 dark:bg-gray-700 dark:text-gray-100">
+                                <option value="">Select your budget range</option>
+                                <option value="$100 - $499">$100 - $499</option>
+                                <option value="$500 - $1,000">$500 - $1,000</option>
+                                <option value="$1,000 - $5,000">$1,000 - $5,000</option>
+                                <option value="$5,000 - $10,000">$5,000 - $10,000</option>
+                                <option value="$10,000+">$10,000+</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="mb-8">
+                        <label for="timeline" class="block text-gray-700 dark:text-gray-300 font-medium mb-2">Expected Timeline *</label>
+                        <select id="timeline" name="timeline" required
+                                class="w-full px-4 py-3 rounded-xl border border-gray-300 dark:border-gray-600 focus:outline-none focus:ring-2 focus:ring-primary-600 dark:bg-gray-700 dark:text-gray-100">
+                            <option value="">Select expected timeline</option>
+                            <option value="Less than 1 month">Less than 1 month</option>
+                            <option value="1-3 months">1-3 months</option>
+                            <option value="3-6 months">3-6 months</option>
+                            <option value="Flexible">Flexible</option>
+                        </select>
+                    </div>
+
+                    <div class="mb-8">
+                        <label for="message" class="block text-gray-700 dark:text-gray-300 font-medium mb-2">Project Details *</label>
+                        <textarea id="message" name="message" rows="6" required
+                                  class="w-full px-4 py-3 rounded-xl border border-gray-300 dark:border-gray-600 focus:outline-none focus:ring-2 focus:ring-primary-600 dark:bg-gray-700 dark:text-gray-100"
+                                  placeholder="Please describe your project requirements and any specific features you need..."></textarea>
+                    </div>
+
+                    <button type="submit"
+                            class="w-full bg-primary-600 text-white py-4 px-8 rounded-xl hover:bg-primary-700 focus:ring-4 focus:ring-primary-400 transition-all duration-300 shadow-lg hover:shadow-xl transform hover:-translate-y-0.5">
+                        <div class="flex items-center justify-center">
+                            <i data-feather="send" class="w-5 h-5 mr-2"></i>
+                            <span>Send Inquiry</span>
+                        </div>
+                    </button>
+
+                    <!-- Flash Messages -->
+                    <div th:if="${message}" class="mt-4 p-4 bg-green-100 text-green-700 rounded-xl">
+                        <p th:text="${message}"></p>
+                    </div>
+                    <div th:if="${error}" class="mt-4 p-4 bg-red-100 text-red-700 rounded-xl">
+                        <p th:text="${error}"></p>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </section>
+</main>
+
+<!-- Scripts -->
+<script>
+    // Dark Mode Toggle
+    function initDarkMode() {
+        const darkModeToggle = document.getElementById('darkModeToggle');
+        const html = document.documentElement;
+
+        function setDarkMode(isDark) {
+            if (isDark) {
+                html.classList.add('dark');
+                localStorage.setItem('darkMode', 'true');
+            } else {
+                html.classList.remove('dark');
+                localStorage.setItem('darkMode', 'false');
+            }
+            feather.replace();
+        }
+
+        const savedDarkMode = localStorage.getItem('darkMode');
+        const prefersDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches;
+
+        if (savedDarkMode === 'true' || (savedDarkMode === null && prefersDarkMode)) {
+            setDarkMode(true);
+        }
+
+        darkModeToggle.addEventListener('click', () => {
+            const isDark = !html.classList.contains('dark');
+            setDarkMode(isDark);
+        });
+    }
+
+    // Sidebar Toggle
+    function initSidebar() {
+        const menuToggle = document.getElementById('menuToggle');
+        const sidebar = document.getElementById('sidebar');
+        const overlay = document.getElementById('overlay');
+
+        menuToggle.addEventListener('click', () => {
+            sidebar.classList.toggle('-translate-x-full');
+            overlay.classList.toggle('hidden');
+        });
+
+        overlay.addEventListener('click', () => {
+            sidebar.classList.add('-translate-x-full');
+            overlay.classList.add('hidden');
+        });
+    }
+
+    // Enhanced Contact Form with Modal
+    function initContactForm() {
+        const form = document.querySelector('form');
+        const submitButton = form.querySelector('button[type="submit"]');
+        const modal = document.getElementById('feedbackModal');
+        const successContent = document.getElementById('successContent');
+        const errorContent = document.getElementById('errorContent');
+        const closeModal = document.getElementById('closeModal');
+
+        // Show modal function with animation
+        function showModal(isSuccess) {
+            modal.classList.remove('hidden');
+            // Force a reflow to enable the transition
+            modal.offsetHeight;
+            modal.classList.add('opacity-100');
+
+            if (isSuccess) {
+                successContent.classList.remove('hidden');
+                errorContent.classList.add('hidden');
+            } else {
+                errorContent.classList.remove('hidden');
+                successContent.classList.add('hidden');
+            }
+
+            setTimeout(() => {
+                modal.querySelector('.scale-95').classList.remove('scale-95');
+            }, 10);
+        }
+
+        // Hide modal function with animation
+        function hideModal() {
+            const modalContent = modal.querySelector('div');
+            modalContent.classList.add('scale-95');
+            modal.classList.add('opacity-0');
+
+            setTimeout(() => {
+                modal.classList.add('hidden');
+                modal.classList.remove('opacity-0');
+                successContent.classList.add('hidden');
+                errorContent.classList.add('hidden');
+            }, 300);
+        }
+
+        // Close modal listeners
+        closeModal.addEventListener('click', hideModal);
+        modal.addEventListener('click', (e) => {
+            if (e.target === modal) hideModal();
+        });
+
+        // Keyboard accessibility for modal
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape' && !modal.classList.contains('hidden')) {
+                hideModal();
+            }
+        });
+
+        // Form submission handler
+        form.addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            // Disable submit button and show loading state
+            submitButton.disabled = true;
+            const originalButtonContent = submitButton.innerHTML;
+            submitButton.innerHTML = `
+                <div class="flex items-center justify-center">
+                    <svg class="animate-spin -ml-1 mr-3 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                        <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                        <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                    </svg>
+                    Sending...
+                </div>
+            `;
+
+            try {
+                const formData = new FormData(form);
+                const response = await fetch('/submit-contact', {
+                    method: 'POST',
+                    body: formData
+                });
+
+                if (response.ok) {
+                    showModal(true);
+                    form.reset();
+                } else {
+                    showModal(false);
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                showModal(false);
+            } finally {
+                // Restore button state
+                submitButton.disabled = false;
+                submitButton.innerHTML = originalButtonContent;
+            }
+        });
+    }
+
+    // Enhanced Animations
+    function initAnimations() {
+        // Hero particles animation
+        const particlesContainer = document.getElementById('particles');
+        if (particlesContainer) {
+            for (let i = 0; i < 50; i++) {
+                const particle = document.createElement('div');
+                particle.className = 'particle';
+                particle.style.width = Math.random() * 5 + 'px';
+                particle.style.height = particle.style.width;
+                particle.style.left = Math.random() * 100 + '%';
+                particle.style.top = Math.random() * 100 + '%';
+                particle.style.animation = `float-particle ${Math.random() * 3 + 2}s infinite`;
+                particlesContainer.appendChild(particle);
+            }
+        }
+
+        // Scroll animations
+        const fadeElements = document.querySelectorAll('.fade-up');
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                }
+            });
+        }, { threshold: 0.1 });
+
+        fadeElements.forEach(element => observer.observe(element));
+
+        // GSAP animations for smoother scrolling
+        if (typeof gsap !== 'undefined' && typeof ScrollTrigger !== 'undefined') {
+            gsap.registerPlugin(ScrollTrigger);
+
+            gsap.from('.process-step', {
+                scrollTrigger: {
+                    trigger: '.process-step',
+                    start: 'top center+=100',
+                    toggleActions: 'play none none reverse'
+                },
+                y: 50,
+                opacity: 0,
+                duration: 1,
+                stagger: 0.2
+            });
+
+            gsap.from('.pricing-card', {
+                scrollTrigger: {
+                    trigger: '.pricing-card',
+                    start: 'top center+=100',
+                    toggleActions: 'play none none reverse'
+                },
+                y: 50,
+                opacity: 0,
+                duration: 1,
+                stagger: 0.2
+            });
+        }
+    }
+function initPricingIntegration() {
+    const pricingButtons = document.querySelectorAll('.pricing-card button');
+    const budgetSelect = document.getElementById('budget');
+    const projectTypeSelect = document.getElementById('projectType');
+    const messageArea = document.getElementById('message');
+
+    pricingButtons.forEach(button => {
+        button.addEventListener('click', (e) => {
+            e.preventDefault();
+            const card = e.target.closest('.pricing-card');
+            const planTitle = card.querySelector('h3').textContent;
+            const planPrice = card.querySelector('.text-4xl').textContent;
+            const planFeatures = Array.from(card.querySelectorAll('ul li span'))
+                .map(span => span.textContent)
+                .join('\n- ');
+
+            // Set the budget in the form based on the selected plan
+            if (planPrice === 'Custom') {
+                budgetSelect.value = '$10,000+';
+            } else if (planPrice === '$499') {
+                budgetSelect.value = '$100 - $499';
+            } else if (planPrice === '$999') {
+                budgetSelect.value = '$500 - $1,000';
+            }
+
+            // Set a default project type based on the plan
+            if (planTitle.includes('Basic')) {
+                projectTypeSelect.value = 'Website Development';
+            } else if (planTitle.includes('Professional')) {
+                projectTypeSelect.value = 'Website Development';
+            } else {
+                projectTypeSelect.value = 'Other';
+            }
+
+            // Add selected plan details to project details
+            const planDetails = `Selected Plan: ${planTitle}\nPrice: ${planPrice}\n\nPlan Features:\n- ${planFeatures}\n\nAdditional Requirements:\n`;
+            messageArea.value = planDetails;
+
+            // Smooth scroll to contact form
+            const contactSection = document.querySelector('section:last-of-type');
+            contactSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+
+            // Optional: Highlight the form to draw attention
+            const form = document.querySelector('form');
+            form.classList.add('ring-4', 'ring-primary-400', 'ring-opacity-50');
+            setTimeout(() => {
+                form.classList.remove('ring-4', 'ring-primary-400', 'ring-opacity-50');
+            }, 2000);
+        });
+    });
+}    // Initialize when DOM is loaded
+document.addEventListener('DOMContentLoaded', () => {
+    feather.replace();
+    initDarkMode();
+    initSidebar();
+    initContactForm();
+    initAnimations();
+    initPricingIntegration(); // Add this line
+});
+</script>
+<!-- Success/Error Modal -->
+<div id="feedbackModal" class="fixed inset-0 bg-black bg-opacity-50 z-[200] flex items-center justify-center hidden transition-opacity duration-300">
+    <div class="bg-white dark:bg-gray-800 rounded-2xl p-6 max-w-md w-full mx-4 transform transition-transform duration-300 scale-95">
+        <div id="successContent" class="hidden">
+            <div class="flex items-center justify-center mb-4">
+                <div class="rounded-full bg-green-100 p-3">
+                    <svg class="w-8 h-8 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                    </svg>
+                </div>
+            </div>
+            <h3 class="text-xl font-semibold text-center text-gray-900 dark:text-gray-100 mb-2">Message Sent Successfully!</h3>
+            <p class="text-gray-600 dark:text-gray-300 text-center mb-6">Thank you for reaching out. I will get back to you soon.</p>
+        </div>
+        <div id="errorContent" class="hidden">
+            <div class="flex items-center justify-center mb-4">
+                <div class="rounded-full bg-red-100 p-3">
+                    <svg class="w-8 h-8 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                    </svg>
+                </div>
+            </div>
+            <h3 class="text-xl font-semibold text-center text-gray-900 dark:text-gray-100 mb-2">Message Not Sent</h3>
+            <p class="text-gray-600 dark:text-gray-300 text-center mb-6">Sorry, there was an error sending your message. Please try again.</p>
+        </div>
+        <button id="closeModal" class="w-full bg-primary-600 text-white py-3 px-6 rounded-xl hover:bg-primary-700 transition-colors duration-300">
+            Close
+        </button>
+    </div>
+</div>
+</body>
+</html>
